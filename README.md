@@ -1,2 +1,8 @@
 # vigilant-waddle
-WebGL2 Test
+## Done
+- [x] Work on Displaying things (init Shaders and Buffers) in WebGL2
+- [x] Displaying a Pyramid, next thing would be a Camera to look around
+
+## Next Up
+- Implement Camera
+- Investigate [Obj to JS](https://github.com/chrispalazzolo/objtojs/blob/master/index.js) 
