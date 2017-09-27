@@ -38,6 +38,7 @@ function drawFrame() {
 
 // Initialization Stuff
 var pyramid;
+var cam;
 
 function start() {
 	canvas = document.getElementById("screen")
@@ -45,7 +46,13 @@ function start() {
 	shaderProgram = initShaders(gl);
 	pyramid = new Pyramid(gl);
 
-	console.log(pyramid)
+	// console.log(pyramid)
+
+	cam = new Camera();
+	// console.log(cam);
+
+	parseText("");
+
 
 	tick(0);
 

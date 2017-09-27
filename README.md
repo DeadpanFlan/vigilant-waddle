@@ -5,4 +5,6 @@
 
 ## Next Up
 - Implement Camera
+	- Camera started, needs to handle mouse and keyboard movements
 - Investigate [Obj to JS](https://github.com/chrispalazzolo/objtojs/blob/master/index.js) 
+	- Started working on my own version
