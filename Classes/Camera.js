@@ -1,7 +1,7 @@
 const Y = -90.0;
 const P =  0.0;
 const SPEED = 2.5;
-const SENSITIVTY = 0.1;
+const SENSITIVTY = 0.3;
 const ZOOM       = 45.0;
 
 var toRad = glMatrix.toRadian;
@@ -20,6 +20,7 @@ class Camera {
 
 		this.updateCameraVectors()
 	}
+
 	getViewMatrix(){
 		var ret = mat4.create();
 		var center = vec3.create();
@@ -44,6 +45,52 @@ class Camera {
 		vec3.normalize(this.right, c1)
 
 		vec3.cross(c1,this.right, this.front);
-		vec3.normalize(this.up,c1 );
+		vec3.normalize(this.up,c1);
 	}
+
+	processMouseMovement(e){
+		var e = e.originalEvent;
+		// console.log(this)
+		var xOff = e.movementX * this.mSensitivity;
+		var yOff = e.movementY * this.mSensitivity;
+
+
+		this.yaw += xOff;
+		this.pitch -= yOff;
+
+		if (this.pitch > 89.0){
+			this.pitch = 89.0;
+		}
+        if (this.pitch < -89.0){
+            this.pitch = -89.0;
+        }
+        this.updateCameraVectors();
+
+	}
+
+	processKeyboard(direction, dTime){
+		var velocity = this.mSpeed * dTime;
+		console.log(this.front)
+		var fb = vec3.create();
+		var lr = vec3.create();
+
+		vec3.scale(fb,this.front,velocity)
+		vec3.scale(lr,this.right,velocity)
+		switch(direction){
+			case 'F':
+				vec3.add(this.position,this.position, fb);
+				break;
+			case 'B':
+				vec3.sub(this.position,this.position, fb)
+				break;
+			case 'L':
+				vec3.sub(this.position,this.position, lr);
+				break;
+			case 'R':
+				vec3.add(this.position,this.position, lr);
+				break;
+		}
+	}
+
+
 }
