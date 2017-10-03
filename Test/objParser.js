@@ -4,45 +4,29 @@ function processLine(str){
 	return str.split(' ');
 }
 
-function parseText(text){
+function readTextFile(file)
+{
 	var ret;
-	text = `# OBJ file created by ply_to_obj.c
-#
-g Object001
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                ret = allText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return ret;
+}
 
-v  0  -0.525731  0.850651
-v  0.850651  0  0.525731
-v  0.850651  0  -0.525731
-v  -0.850651  0  -0.525731
-v  -0.850651  0  0.525731
-v  -0.525731  0.850651  0
-v  0.525731  0.850651  0
-v  0.525731  -0.850651  0
-v  -0.525731  -0.850651  0
-v  0  -0.525731  -0.850651
-v  0  0.525731  -0.850651
-v  0  0.525731  0.850651
-
-f  2  3  7
-f  2  8  3
-f  4  5  6
-f  5  4  9
-f  7  6  12
-f  6  7  11
-f  10  11  3
-f  11  10  4
-f  8  9  10
-f  9  8  1
-f  12  1  2
-f  1  12  5
-f  7  3  11
-f  2  7  12
-f  4  6  11
-f  6  5  12
-f  3  8  10
-f  8  2  1
-f  4  10  9
-f  5  9  1`
+function parseText(url){
+	var ret;
+	var text = readTextFile(url);
 
 	var num_lines = 0;
 	var lines = [];
@@ -57,6 +41,15 @@ f  5  9  1`
 
 		num_lines = lines.length;
 
+		var obj = {
+			v: [],
+			vn: [],
+			vt: [],
+			f: [],
+		}
+
+
+
 		var line = null;
 		for (var i = 0; i <= num_lines - 1; i++) {
 			line = lines[i]
@@ -67,16 +60,23 @@ f  5  9  1`
 
 			switch(line[0]){
 				case '#':
-					console.log(line);
 					break;
 				case 'v':
 				case 'vt':
 				case 'vn':
-				case 'vp':
+					obj[line[0]].push(line.slice(1).map(function(x){
+						return parseFloat(x);
+					}))
+					break;
+				case 'f':
+					obj[line[0]].push(line.slice(1).map(function(x){
+						return parseInt(x);
+					}))
 					break;
 				default:
 					break;
 			}
 		}
+		// console.log(obj)
 	}
 }

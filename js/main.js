@@ -11,12 +11,10 @@ var canvas;
 var shaderProgram;
 
 var mMatrix = mat4.create();
-// var vMatrix = mat4.create();
 var pMatrix = mat4.create();
 
 function setMatrixUniforms() {
 	gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-	// gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, vMatrix);
 	gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, cam.getViewMatrix());
 	gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, mMatrix);
 }
@@ -32,10 +30,49 @@ function drawFrame() {
 	mat4.translate(mMatrix, mMatrix, [-1.5, 0.0, -8.0]);
 
 	gl.bindVertexArray(pyramid.vertexArray);
-	// gl.useProgram(shaderProgram); // Use to switch between shaders
+	// gl.useProgram(shaderProgram); // Use to switch between shaders if more than one
 	setMatrixUniforms();
-	gl.drawArrays(gl.TRIANGLES, 0, pyramid.numItems);
+	// gl.drawArrays(gl.TRIANGLES, 0, pyramid.numItems);
+	// console.log(pyramid)
+	gl.drawElements(gl.TRIANGLES, 12,  gl.UNSIGNED_SHORT, 0)
 	gl.bindVertexArray(null);
+}
+
+// Camera Init and Pointerlock
+var cam = new Camera();
+var keys = [];
+
+function lockChangeAlert() {
+	if (document.pointerLockElement === canvas ||
+		document.mozPointerLockElement === canvas) {
+		console.log('The pointer lock status is now locked');
+		// document.addEventListener("mousemove",handleMouse , false);
+		$('#screen').mousemove(handleMouse);
+		// Handle keys
+		$(document).keydown(
+			function(e){
+				if(!e.originalEvent.repeat){
+					keys[e.key] = true;
+				}
+			}
+		);
+		$(document).keyup(
+			function (e) {
+				keys[e.key] = false;
+			}
+		);
+
+	} else {
+		console.log('The pointer lock status is now unlocked');
+		$('#screen').off('mousemove keydown');
+		keys = [];
+		// $(document).off('keypress');
+
+	}
+}
+
+function handleMouse(e){
+	cam.processMouseMovement(e.originalEvent.movementX, e.originalEvent.movementY);
 }
 
 
@@ -43,23 +80,6 @@ function drawFrame() {
 
 // Initialization Stuff
 var pyramid;
-var cam = new Camera();
-
-
-function lockChangeAlert() {
-	var t = (e => cam.processMouseMovement(e));
-	if (document.pointerLockElement === canvas ||
-		document.mozPointerLockElement === canvas) {
-		console.log('The pointer lock status is now locked');
-		// document.addEventListener("mousemove",t , false);
-		$('#screen').mousemove(t);
-	} else {
-		console.log('The pointer lock status is now unlocked');
-		$('#screen').off('mousemove');
-		// document.removeEventListener("mousemove", t, false);
-
-	}
-}
 
 function start() {
 	canvas = document.getElementById("screen")
@@ -79,11 +99,12 @@ function start() {
 	}
 
 
-
 	shaderProgram = initShaders(gl);
 	pyramid = new Pyramid(gl);
 
-	// parseText("");
+	parseText("Objects/icosNorms.obj");
+	// parseText("Objects/tpNorms.obj");
+
 
 
 	tick(0);
@@ -107,13 +128,22 @@ function initGL(cv) {
 
 var lastTime = 0;
 
-function animate(now) {
+function processKeys(now) {
 	if (lastTime != 0) {
 		var elapsed = (now - lastTime)/1000;
-		// console.log(elapsed)
 
-		// rTri += (90 * elapsed) / 1000.0;
-		// rSquare += (75 * elapsed) / 1000.0;
+		if(keys['w'] || keys['ArrowUp']){
+			cam.processKeyboard('F',elapsed);
+		}
+		if(keys['a'] || keys['ArrowLeft']){
+			cam.processKeyboard('L',elapsed);
+		}
+		if(keys['s'] || keys['ArrowDown']){
+			cam.processKeyboard('B',elapsed);
+		}
+		if(keys['d'] || keys['ArrowRight']){
+			cam.processKeyboard('R',elapsed);
+		}
 	}
 	lastTime = now;
 }
@@ -121,9 +151,8 @@ function animate(now) {
 function tick(now){ 
 
 	requestAnimationFrame(tick);
-	// cam.processKeyboard('B',0.1);
 	drawFrame();
-	animate(now);
+	processKeys(now);
 
 }
 

@@ -48,11 +48,11 @@ class Camera {
 		vec3.normalize(this.up,c1);
 	}
 
-	processMouseMovement(e){
-		var e = e.originalEvent;
+	processMouseMovement(xOff,yOff){
+		// var e = e.originalEvent;
 		// console.log(this)
-		var xOff = e.movementX * this.mSensitivity;
-		var yOff = e.movementY * this.mSensitivity;
+		xOff *= this.mSensitivity;
+		yOff *= this.mSensitivity;
 
 
 		this.yaw += xOff;
@@ -70,7 +70,6 @@ class Camera {
 
 	processKeyboard(direction, dTime){
 		var velocity = this.mSpeed * dTime;
-		console.log(this.front)
 		var fb = vec3.create();
 		var lr = vec3.create();
 
