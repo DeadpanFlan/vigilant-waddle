@@ -102,18 +102,28 @@ function start() {
 	shaderProgram = initShaders(gl);
 	pyramid = new Pyramid(gl);
 
-	parseText("Objects/pyrNorms.obj");
+	// Get object
+	var url = "Objects/pyrNorms.obj";
+	var prom = $.ajax(url);
 
-	// parseText("Objects/icosNorms.obj");
-	// console.log(obj);
-	// parseText("Objects/tpNorms.obj");
+	prom.then(
+		function(text){
+			var t = parseText(text);
+			console.log(t);
+
+			gl.clearColor(0.0, 0.0, 0.0, 1.0);
+			gl.enable(gl.DEPTH_TEST);
+
+			tick(0);
+
+		}
+	)
 
 
 
-	tick(0);
 
-	gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	gl.enable(gl.DEPTH_TEST);
+
+
 	// alert("Start");
 }
 
