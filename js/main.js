@@ -102,7 +102,10 @@ function start() {
 	shaderProgram = initShaders(gl);
 	pyramid = new Pyramid(gl);
 
-	parseText("Objects/icosNorms.obj");
+	parseText("Objects/pyrNorms.obj");
+
+	// parseText("Objects/icosNorms.obj");
+	// console.log(obj);
 	// parseText("Objects/tpNorms.obj");
 
 
@@ -127,10 +130,17 @@ function initGL(cv) {
 }
 
 var lastTime = 0;
+var nFrames = 0;
 
 function processKeys(now) {
 	if (lastTime != 0) {
 		var elapsed = (now - lastTime)/1000;
+		nFrames++;
+		if(elapsed >= 1){
+			console.log(1000/nFrames);
+			nFrames = 0;
+		}
+
 
 		if(keys['w'] || keys['ArrowUp']){
 			cam.processKeyboard('F',elapsed);
@@ -148,9 +158,11 @@ function processKeys(now) {
 	lastTime = now;
 }
 
+
 function tick(now){ 
 
 	requestAnimationFrame(tick);
+
 	drawFrame();
 	processKeys(now);
 

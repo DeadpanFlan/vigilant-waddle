@@ -8,3 +8,9 @@
 ## Next Up
 - Investigate [Obj to JS](https://github.com/chrispalazzolo/objtojs/blob/master/index.js) 
 	- Started working on my own version
+	- Assuming a valid OBJ file is given, fills position, norms, uvs and index for use with VAO
+		- No object or group support 
+		- no material support
+- Lighting
+	- Forward Rendering
+	- Deferred Rendering
