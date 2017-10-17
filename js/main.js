@@ -103,7 +103,9 @@ function start() {
 	pyramid = new Pyramid(gl);
 
 	// Get object
-	var url = "Objects/pyrNorms.obj";
+	var url = "Objects/sphereUV.obj";
+	
+	// var url = "Objects/pyrNorms.obj";
 	var prom = $.ajax(url);
 
 	prom.then(

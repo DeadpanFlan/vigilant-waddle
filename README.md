@@ -11,6 +11,11 @@
 	- Assuming a valid OBJ file is given, fills position, norms, uvs and index for use with VAO
 		- No object or group support 
 		- no material support
+	- Work on Tangents and Bitangents (for use in future with Normal Mapping)
+		- Need to be calculated per face
+		- Save VBO Indexing for another time?
+		- Use tangentSpace and objloader from here as model
+			- https://github.com/opengl-tutorials/ogl/tree/master/common
 - Lighting
 	- Forward Rendering
 	- Deferred Rendering
