@@ -29,13 +29,11 @@ function drawFrame() {
 
 	mat4.translate(mMatrix, mMatrix, [-1.5, 0.0, -8.0]);
 
-	gl.bindVertexArray(pyramid.vertexArray);
 	// gl.useProgram(shaderProgram); // Use to switch between shaders if more than one
 	setMatrixUniforms();
-	// gl.drawArrays(gl.TRIANGLES, 0, pyramid.numItems);
-	// console.log(pyramid)
-	gl.drawElements(gl.TRIANGLES, 12,  gl.UNSIGNED_SHORT, 0)
-	gl.bindVertexArray(null);
+	pyramid.draw(gl);
+	// gl.drawElements(gl.TRIANGLES, pyramid.numItems,  gl.UNSIGNED_SHORT, 0)
+	// gl.bindVertexArray(null);
 }
 
 // Camera Init and Pointerlock
@@ -100,33 +98,41 @@ function start() {
 
 
 	shaderProgram = initShaders(gl);
-	pyramid = new Pyramid(gl);
+	// pyramid = new Pyramid(gl);
 
 	// Get object
 	var url = "Objects/sphereUV.obj";
-	
+
 	// var url = "Objects/pyrNorms.obj";
-	var prom = $.ajax(url);
+	// var prom = $.ajax(url);
 
-	prom.then(
-		function(text){
-			var t = parseText(text);
-			console.log(t);
+	fetch(url)
+	// Parse response as text or log error
+	.then((res) => {
+		if (!res.ok) {
+            throw Error(res.statusText);
+        }
+		return res.text();
+	})
+	.then((data) => {
+		var t = parseText(data);
+		// console.log(t);
 
-			gl.clearColor(0.0, 0.0, 0.0, 1.0);
-			gl.enable(gl.DEPTH_TEST);
+		// var obj = new MyObject(gl,t.vertexPositions,t.indexes);
+		pyramid = new MyObject(gl,t.vertexPositions,t.indexes);
 
-			tick(0);
+		gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-		}
-	)
+		gl.cullFace (gl.BACK);
+		gl.frontFace (gl.CCW);
+		gl.enable (gl.CULL_FACE);
+		gl.enable (gl.DEPTH_TEST);
 
-
-
-
-
-
-	// alert("Start");
+		tick(0);
+	})
+	.catch((err) => {
+		console.log(err)
+	})
 }
 
 function initGL(cv) {
@@ -171,7 +177,7 @@ function processKeys(now) {
 }
 
 
-function tick(now){ 
+function tick(now){
 
 	requestAnimationFrame(tick);
 
@@ -179,6 +185,3 @@ function tick(now){
 	processKeys(now);
 
 }
-
-
-

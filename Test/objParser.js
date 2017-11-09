@@ -88,11 +88,11 @@ function parseText(text){
 		ret = {
 
 			indexes: new Uint16Array([]),
-			vertexPositions: new Float32Array([]), 
-			vertexNorms: new Float32Array([]), 
-			vertexUV: new Float32Array([]), 
-			vertexTangent: new Float32Array([]), 
-			vertexBitangent: new Float32Array([]), 
+			vertexPositions: new Float32Array([]),
+			vertexNorms: new Float32Array([]),
+			vertexUV: new Float32Array([]),
+			// vertexTangent: new Float32Array([]),
+			// vertexBitangent: new Float32Array([]),
 		}
 		var faceMap = [];
 
@@ -118,7 +118,7 @@ function parseText(text){
 				case 'f':
 					for (var j = 1; j < line.length; j++) {
 						if(faceMap[line[j]] == undefined){
-							faceMap[line[j]] = Object.keys(faceMap).length +1;
+							faceMap[line[j]] = Object.keys(faceMap).length;
 						}
 						var faces = line[j].indexOf('/') > -1 ? line[j].split('/') : [line[j]];
 
@@ -143,26 +143,26 @@ function parseText(text){
 			}
 		}
 		// Calculate Tangent and Bitangents
-		if(ret.vertexPositions.length/3 == ret.vertexNorms.length/3 && ret.vertexNorms.length/3 == ret.vertexUV.length/2){
-			for(i = 0; i < ret.vertexPositions.length; i +=9){
-				var j = 0;
-				var v0 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
-				j++;
-				var v1 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
-				j++;
-				var v2 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		// if(ret.vertexPositions.length/3 == ret.vertexNorms.length/3 && ret.vertexNorms.length/3 == ret.vertexUV.length/2){
+		// 	for(i = 0; i < ret.vertexPositions.length; i +=9){
+		// 		var j = 0;
+		// 		var v0 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		// 		j++;
+		// 		var v1 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		// 		j++;
+		// 		var v2 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		//
+		// 		j = 0;
+		// 		var uv0 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		// 		j++;
+		// 		var uv1 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		// 		j++;
+		// 		var uv2 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
+		//
+		// 	}
+		//
+		// }
 
-				j = 0;
-				var uv0 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
-				j++;
-				var uv1 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
-				j++;
-				var uv2 = fromArray(ret.vertexPositions.subarray((i+j*3),((i+j*3))+3 ));
-
-			}
-			
-		}
-		
 	}
 	return ret;
 }
@@ -170,8 +170,3 @@ function parseText(text){
 function fromArray(arr){
 	return vec3.fromValues(arr[0],arr[1],arr[2]);
 }
-
-
-
-
-	
