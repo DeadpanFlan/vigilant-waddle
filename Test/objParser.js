@@ -93,6 +93,7 @@ function parseText(text){
 			vertexUV: new Float32Array([]),
 			// vertexTangent: new Float32Array([]),
 			// vertexBitangent: new Float32Array([]),
+			testvar: []
 		}
 		var faceMap = [];
 
@@ -119,22 +120,28 @@ function parseText(text){
 					for (var j = 1; j < line.length; j++) {
 						if(faceMap[line[j]] == undefined){
 							faceMap[line[j]] = Object.keys(faceMap).length;
-						}
-						var faces = line[j].indexOf('/') > -1 ? line[j].split('/') : [line[j]];
 
-						var f = faces.map(function(x){
-							return parseInt(x);
-						})
-						ret.indexes = Uint16Concat(ret.indexes, [faceMap[line[j]]])
-						ret.vertexPositions = Float32Concat(ret.vertexPositions ,tmp.v[f[0]-1])
-						if(f[1] && !isNaN(f[1])){
-							ret.vertexUV = Float32Concat(ret.vertexUV ,tmp.vt[f[1]-1])
+							var faces = line[j].indexOf('/') > -1 ? line[j].split('/') : [line[j]];
 
-						}
-						if(f[2] && !isNaN(f[2])){
-							ret.vertexNorms = Float32Concat(ret.vertexNorms ,tmp.vn[f[2]-1])
+							var f = faces.map(function(x){
+								return parseInt(x);
+							})
 
+							ret.vertexPositions = Float32Concat(ret.vertexPositions ,tmp.v[f[0]-1])
+							if(f[1] && !isNaN(f[1])){
+								ret.vertexUV = Float32Concat(ret.vertexUV ,tmp.vt[f[1]-1])
+
+							}
+							if(f[2] && !isNaN(f[2])){
+								ret.vertexNorms = Float32Concat(ret.vertexNorms ,tmp.vn[f[2]-1])
+
+							}
 						}
+
+
+						ret.indexes = Uint16Concat(ret.indexes, [faceMap[line[j]]]);
+						ret.testvar.push(line[j])
+						performance.now();
 
 					}
 					break;

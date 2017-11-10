@@ -5,15 +5,12 @@
 - [x] Folder for storing OBJ files added
 - [x] Flying Camera
 - [x] Generic Mesh object created for storing meshes loaded from obj file.
+- [x] Assuming a valid OBJ file is given, fills position, norms, uvs and index for use with VAO
 
 ## Next Up
 - Investigate [Obj to JS](https://github.com/chrispalazzolo/objtojs/blob/master/index.js)
 	- Started working on my own version
-	- Assuming a valid OBJ file is given, fills position, norms, uvs and index for use with VAO
-		- No object or group support
-			- May add at a future date to handle importing objects that belong together
-			- Currently
-		- no material support
+
 	- Work on Tangents and Bitangents (for use in future with Normal Mapping)
 		- Need to be calculated per face
 		- Save VBO Indexing for another time?
@@ -25,6 +22,9 @@
 - Generic Mesh object
 	- Currently only handles positions, need to extend to normals and uv (tangents and Bitangents in the future)
 	- Currently generates color per triangle; need to implement textures
+- Shaders
+	- Consider texture0 as a White Texture
+	- Also pass a color and mix them possibly
 
 ## Running
 ```bash

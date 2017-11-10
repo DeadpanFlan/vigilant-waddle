@@ -1,0 +1,82 @@
+class Mesh {
+	constructor(gl,pos,norm,uv,idx,col){
+		this.indices = idx;
+		this.positions = pos;
+		this.vertexArray = gl.createVertexArray();
+		gl.bindVertexArray(this.vertexArray);
+
+		var positionBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+		gl.enableVertexAttribArray(0);
+		gl.bufferData(gl.ARRAY_BUFFER, pos, gl.STATIC_DRAW);
+
+		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 12, 0);
+
+
+		var fColors = new Float32Array();
+		if(!col){
+			var colors = []
+			while(colors.length/4 < pos.length/3){
+				colors = colors.concat([1.0, 0.0, 0.0, 1.0,
+	            0.0, 1.0, 0.0, 1.0,
+	            0.0, 0.0, 1.0, 1.0])
+			}
+			fColors = new Float32Array(colors);
+		}else{
+			fColors = col;
+		}
+
+		var colourBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, colourBuffer);
+		gl.enableVertexAttribArray(1);
+		gl.bufferData(gl.ARRAY_BUFFER, fColors, gl.STATIC_DRAW);
+		gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 16, 0);
+
+
+		var vertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vertexIndexBuffer);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, idx, gl.STATIC_DRAW)
+
+		gl.bindVertexArray(null);
+
+		this.numItems = idx.length;
+	}
+
+	draw(gl){
+		gl.bindVertexArray(this.vertexArray);
+		gl.drawElements(gl.TRIANGLES, this.numItems,  gl.UNSIGNED_SHORT, 0)
+		// gl.drawArrays(gl.TRIANGLES, 0, this.numItems);
+		gl.bindVertexArray(null);
+	}
+
+	// setTexture(texture){
+	// 	this.texture = gl.
+	// }
+}
+
+
+class Pyramid extends Mesh {
+	constructor(gl,){
+		super(gl,new Float32Array ([
+			// Front face
+			 0.0,  1.0,  0.0,
+			-1.0, -1.0,  1.0,
+			 1.0, -1.0,  1.0,
+
+			// Right face
+			 0.0,  1.0,  0.0,
+			 1.0, -1.0,  1.0,
+			 1.0, -1.0, -1.0,
+
+			// Back face
+			 0.0,  1.0,  0.0,
+			 1.0, -1.0, -1.0,
+			-1.0, -1.0, -1.0,
+
+			// Left face
+			 0.0,  1.0,  0.0,
+			-1.0, -1.0, -1.0,
+			-1.0, -1.0,  1.0
+		]));
+	}
+}
