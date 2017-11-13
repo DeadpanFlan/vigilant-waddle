@@ -1,46 +1,27 @@
+class MyStore {
 
+	constructor(){
+		this.faceMap = [];
+		this.indexes = new Uint16Array([]);
+		this.vertexPositions = new Float32Array([]);
+		this.vertexNorms = new Float32Array([]);
+		this.vertexUV = new Float32Array([]);
+	}
 
-function processLine(str){
+	appendPosition(pos)
+	{
+
+	}
+}
+
+function processLine(str)
+{
 	str = str.replace(/\s\s+/g, ' ');
 	str = str.trim();
 	return str.split(' ');
 }
 
-function readTextFile(file)
-{
-	var ret;
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, true);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-    			console.log(allText)
 
-                ret = allText;
-            }
-        }
-    }
-    rawFile.send(null);
-    return ret;
-}
-
-function arraysEqual(a, b) {
-  if (a === b) return true;
-  if (a == null || b == null) return false;
-  if (a.length != b.length) return false;
-
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-
-  for (var i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
 
 function Float32Concat(first, second)
 {
@@ -65,7 +46,7 @@ function Uint16Concat(first, second)
 }
 
 function parseText(text){
-	var ret;
+	var ret, ret2;
 	var num_lines = 0;
 	var lines = [];
 
@@ -85,6 +66,8 @@ function parseText(text){
 			vt: [],
 		}
 
+		var storage = [];
+
 		ret = {
 
 			indexes: new Uint16Array([]),
@@ -95,6 +78,8 @@ function parseText(text){
 			// vertexBitangent: new Float32Array([]),
 			testvar: []
 		}
+
+		ret2 = new MyStore();
 		var faceMap = [];
 
 
@@ -117,17 +102,18 @@ function parseText(text){
 					}))
 					break;
 				case 'f':
-					for (var j = 1; j < line.length; j++) {
+					for (let j = 1; j < line.length; j++) {
 						if(faceMap[line[j]] == undefined){
+
 							faceMap[line[j]] = Object.keys(faceMap).length;
+							ret2.faceMap[line[j]] = Object.keys(ret2.faceMap).length;
 
-							var faces = line[j].indexOf('/') > -1 ? line[j].split('/') : [line[j]];
+							let faces = line[j].indexOf('/') > -1 ? line[j].split('/') : [line[j]];
 
-							var f = faces.map(function(x){
-								return parseInt(x);
-							})
+							let f = faces.map(x => parseInt(x));
 
 							ret.vertexPositions = Float32Concat(ret.vertexPositions ,tmp.v[f[0]-1])
+
 							if(f[1] && !isNaN(f[1])){
 								ret.vertexUV = Float32Concat(ret.vertexUV ,tmp.vt[f[1]-1])
 
@@ -137,12 +123,7 @@ function parseText(text){
 
 							}
 						}
-
-
 						ret.indexes = Uint16Concat(ret.indexes, [faceMap[line[j]]]);
-						ret.testvar.push(line[j])
-						performance.now();
-
 					}
 					break;
 				default:

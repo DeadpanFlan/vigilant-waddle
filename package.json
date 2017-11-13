@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "test": "tsc",
+    "start": "http-server -p 8080"
+  }
+}

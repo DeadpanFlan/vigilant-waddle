@@ -52,12 +52,13 @@ function initShaders(gl){
 			shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 			shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
 			shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
+			shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "tex");
 
-			
+
 		return shaderProgram;
 
 
 	} catch (e) {
-		
+
 	}
 }

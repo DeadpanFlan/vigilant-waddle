@@ -31,7 +31,13 @@ function drawFrame() {
 
 	// gl.useProgram(shaderProgram); // Use to switch between shaders if more than one
 	setMatrixUniforms();
-	mesh.draw(gl);
+	gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.uniform1i(shaderProgram.samplerUniform, 0);
+	for(let m of meshes){
+		m.draw(gl);
+	}
+
 }
 
 // Camera Init and Pointerlock
@@ -71,16 +77,31 @@ function handleMouse(e){
 	cam.processMouseMovement(e.originalEvent.movementX, e.originalEvent.movementY);
 }
 
+var texture;
+function initTexture() {
+  texture = gl.createTexture();
+  texture.image = new Image();
+  texture.image.onload = function () {
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		gl.bindTexture(gl.TEXTURE_2D, null);
+  }
 
-
+  texture.image.src = "Objects/cube.png";
+}
 
 // Initialization Stuff
 var mesh;
+var meshes = [];
 var testBufferInfo;
 
 function start() {
 	canvas = document.getElementById("screen")
 	initGL(canvas);
+	initTexture();
 
 	canvas.requestPointerLock =	canvas.requestPointerLock ||
 								canvas.mozRequestPointerLock;
@@ -99,7 +120,8 @@ function start() {
 	shaderProgram = initShaders(gl);
 
 	// Get object
-	var url = "Objects/icosahedron.obj";
+	// var url = "Objects/Alice_Wake_underwear.obj";
+	var url = "Objects/cube.obj";
 
 	fetch(url)
 	// Parse response as text or log error
@@ -110,9 +132,15 @@ function start() {
 		return res.text();
 	})
 	.then((data) => {
-		var t = parseText(data);
+		// var t = parseText(data);
+		var test = parseOBJ(data);
 
-		mesh = new Mesh(gl,t.vertexPositions,t.vertexNorms, t.vertexUV, t.indexes);
+
+		for(let e of test){
+			meshes.push(new Mesh(gl,new Float32Array(e.vertexPositions),new Float32Array(e.vertexNorms), new Float32Array(e.vertexUV), new Uint16Array(e.indices)));
+		}
+
+		//mesh = new Mesh(gl,t.vertexPositions,t.vertexNorms, t.vertexUV, t.indexes);
 		// pyramid = new Mesh(gl,arrays.position,arrays.normal, arrays.texcoord,arrays.indices);
 
 		gl.clearColor(0.0, 0.0, 0.0, 1.0);

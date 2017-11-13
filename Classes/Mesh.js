@@ -17,9 +17,17 @@ class Mesh {
 		if(!col){
 			var colors = []
 			while(colors.length/4 < pos.length/3){
-				colors = colors.concat([1.0, 0.0, 0.0, 1.0,
-	            0.0, 1.0, 0.0, 1.0,
-	            0.0, 0.0, 1.0, 1.0])
+				// colors = colors.concat([
+				// 	1.0, 0.0, 0.0, 1.0,
+				// 	0.0, 1.0, 0.0, 1.0,
+				// 	0.0, 0.0, 1.0, 1.0
+				// ]);
+
+				colors = colors.concat([
+					1.0, 1.0, 1.0, 1.0
+				]);
+
+
 			}
 			fColors = new Float32Array(colors);
 		}else{
@@ -31,6 +39,12 @@ class Mesh {
 		gl.enableVertexAttribArray(1);
 		gl.bufferData(gl.ARRAY_BUFFER, fColors, gl.STATIC_DRAW);
 		gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 16, 0);
+
+		var uvBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+		gl.enableVertexAttribArray(2);
+		gl.bufferData(gl.ARRAY_BUFFER, uv, gl.STATIC_DRAW);
+		gl.vertexAttribPointer(2,2,gl.FLOAT, false, 8,0);
 
 
 		var vertexIndexBuffer = gl.createBuffer();
