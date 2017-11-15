@@ -1,6 +1,7 @@
 const Y = -90.0;
 const P =  0.0;
 const SPEED = 2.5;
+// const SPEED = 250;
 const SENSITIVTY = 0.3;
 const ZOOM       = 45.0;
 
@@ -68,8 +69,9 @@ class Camera {
 
 	}
 
-	processKeyboard(direction, dTime){
+	processKeyboard(direction, dTime, shift=false){
 		var velocity = this.mSpeed * dTime;
+		if(shift) velocity*=3;
 		var fb = vec3.create();
 		var lr = vec3.create();
 

@@ -15,19 +15,21 @@
 ## Next Up
 - Investigate [Obj to JS](https://github.com/chrispalazzolo/objtojs/blob/master/index.js)
 	- Started working on my own version
-
 	- Work on Tangents and Bitangents (for use in future with Normal Mapping)
 		- Need to be calculated per face
 		- Save VBO Indexing for another time?
 		- Use tangentSpace and objloader from here as model
 			- https://github.com/opengl-tutorials/ogl/tree/master/common
+	- Add Materials to object that is returned to be used by meshes
 - Lighting
 	- Forward Rendering
 	- Deferred Rendering
 - Generic Mesh object
 	- Textures implemented
 		- need to create a default state for meshes with no Textures
-		-Multiple Textures
+		- Multiple Textures
+		- Need to read textures from Material
+
 
 - Shaders
 	- Consider texture0 as a White Texture

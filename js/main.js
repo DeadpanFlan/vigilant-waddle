@@ -24,7 +24,7 @@ function drawFrame() {
 	gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-	mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+	mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0);
 	mat4.identity(mMatrix);
 
 	mat4.translate(mMatrix, mMatrix, [-1.5, 0.0, -8.0]);
@@ -79,7 +79,7 @@ function handleMouse(e){
 
 var texture;
 function initTexture() {
-  texture = gl.createTexture();
+  // texture = gl.createTexture();
   texture.image = new Image();
   texture.image.onload = function () {
 		gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -101,6 +101,7 @@ var testBufferInfo;
 function start() {
 	canvas = document.getElementById("screen")
 	initGL(canvas);
+	texture = gl.createTexture();
 	initTexture();
 
 	canvas.requestPointerLock =	canvas.requestPointerLock ||
@@ -120,28 +121,14 @@ function start() {
 	shaderProgram = initShaders(gl);
 
 	// Get object
-	// var url = "Objects/Alice_Wake_underwear.obj";
 	var url = "Objects/cube.obj";
 
-	fetch(url)
-	// Parse response as text or log error
-	.then((res) => {
-		if (!res.ok) {
-            throw Error(res.statusText);
-        }
-		return res.text();
-	})
-	.then((data) => {
-		// var t = parseText(data);
-		var test = parseOBJ(data);
+	var testvar = parseObjURL("Objects/", "cube.obj")
 
-
-		for(let e of test){
-			meshes.push(new Mesh(gl,new Float32Array(e.vertexPositions),new Float32Array(e.vertexNorms), new Float32Array(e.vertexUV), new Uint16Array(e.indices)));
+	testvar.then(x =>{
+		for(let e of x){
+			meshes.push(new Mesh(gl,new Float32Array(e.vertexPositions),new Float32Array(e.vertexNorms), new Float32Array(e.vertexUV), new Uint16Array(e.indices), e.material));
 		}
-
-		//mesh = new Mesh(gl,t.vertexPositions,t.vertexNorms, t.vertexUV, t.indexes);
-		// pyramid = new Mesh(gl,arrays.position,arrays.normal, arrays.texcoord,arrays.indices);
 
 		gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -152,9 +139,7 @@ function start() {
 
 		tick(0);
 	})
-	.catch((err) => {
-		console.log(err)
-	})
+
 }
 
 function initGL(cv) {
@@ -183,16 +168,16 @@ function processKeys(now) {
 
 
 		if(keys['w'] || keys['ArrowUp']){
-			cam.processKeyboard('F',elapsed);
+			cam.processKeyboard('F',elapsed, keys["Shift"]);
 		}
 		if(keys['a'] || keys['ArrowLeft']){
-			cam.processKeyboard('L',elapsed);
+			cam.processKeyboard('L',elapsed,  keys["Shift"]);
 		}
 		if(keys['s'] || keys['ArrowDown']){
-			cam.processKeyboard('B',elapsed);
+			cam.processKeyboard('B',elapsed,  keys["Shift"]);
 		}
 		if(keys['d'] || keys['ArrowRight']){
-			cam.processKeyboard('R',elapsed);
+			cam.processKeyboard('R',elapsed,  keys["Shift"]);
 		}
 	}
 	lastTime = now;

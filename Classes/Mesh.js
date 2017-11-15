@@ -1,5 +1,5 @@
 class Mesh {
-	constructor(gl,pos,norm,uv,idx,col){
+	constructor(gl,pos,norm,uv,idx,mtl, col){
 		this.indices = idx;
 		this.positions = pos;
 		this.vertexArray = gl.createVertexArray();
@@ -23,9 +23,7 @@ class Mesh {
 				// 	0.0, 0.0, 1.0, 1.0
 				// ]);
 
-				colors = colors.concat([
-					1.0, 1.0, 1.0, 1.0
-				]);
+				colors = colors.concat(mtl.Kd).concat([mtl.d]);
 
 
 			}
@@ -66,31 +64,4 @@ class Mesh {
 	// setTexture(texture){
 	// 	this.texture = gl.
 	// }
-}
-
-
-class Pyramid extends Mesh {
-	constructor(gl,){
-		super(gl,new Float32Array ([
-			// Front face
-			 0.0,  1.0,  0.0,
-			-1.0, -1.0,  1.0,
-			 1.0, -1.0,  1.0,
-
-			// Right face
-			 0.0,  1.0,  0.0,
-			 1.0, -1.0,  1.0,
-			 1.0, -1.0, -1.0,
-
-			// Back face
-			 0.0,  1.0,  0.0,
-			 1.0, -1.0, -1.0,
-			-1.0, -1.0, -1.0,
-
-			// Left face
-			 0.0,  1.0,  0.0,
-			-1.0, -1.0, -1.0,
-			-1.0, -1.0,  1.0
-		]));
-	}
 }
